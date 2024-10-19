@@ -1,3 +1,5 @@
+// !! Problem in toggling read status
+
 let library = [];
 
 // Book object constructor function
@@ -6,13 +8,16 @@ function Book(title, author, pages, readStatus) {
     (this.author = author),
     (this.pages = pages),
     (this.readStatus = readStatus);
-  // 'changeReadStatus' = function changeReadStatus() {
-  // 	if (readStatus === 'Yes') {
-  // 		readStatus = 'No';
-  // 	} else if (readStatus === 'No') {
-  // 		readStatus = 'Yes';
-  // 	}
-  // }
+
+  // A method to change book's read status property
+  // this.changeReadStatus = function (index) {
+  //   // const book = this;
+  //   if (index.readStatus === "Yes") {
+  //     index.readStatus = "No";
+  //   } else if (index.readStatus === "No"){
+  //     index.readStatus = "Yes";
+  //   }
+  // };
 }
 
 // A function to a add a book to the library
@@ -40,7 +45,11 @@ document.querySelector(".cancel").addEventListener("click", () => {
 });
 
 // Add event listener to "Submit" button in form modal
+let submitClicked = false;
 document.querySelector(".submit").addEventListener("click", (event) => {
+
+  submitClicked = true;
+
   // Prevent submit button default behavior
   event.preventDefault();
 
@@ -53,6 +62,8 @@ document.querySelector(".submit").addEventListener("click", (event) => {
   // add the book to the library
   addToLibrary(title, author, pages, readStatus);
 
+  console.log(library);
+
   // display the book
   document.querySelector(".content").insertAdjacentHTML(
     "beforeend",
@@ -61,10 +72,14 @@ document.querySelector(".submit").addEventListener("click", (event) => {
 					<p>Title: ${library.at(-1).title}</p>
 					<p>Author: ${library.at(-1).author}</p>
 					<p>Pages: ${library.at(-1).pages}</p>
-					<p>Read: ${library.at(-1).readStatus}</p>
+					<p class="readStatus" data-index-read="${library.length - 1}">Read: ${
+      library.at(-1).readStatus
+    }</p>
 				</div>
 				<div class="buttons">
-					<button type="button" class="toggle-read-status">Toggle read status</button>
+					<button type="button" class="toggle-read-status" data-index="${
+            library.length - 1
+          }">Toggle read status</button>
 					<button type="button" class="remove" data-index="${
             library.length - 1
           }">Remove</button>
@@ -79,9 +94,23 @@ document.querySelector(".submit").addEventListener("click", (event) => {
   document.querySelectorAll(".remove").forEach((button) => {
     button.addEventListener("click", () => {
       let index = button.dataset.index;
-      console.log(button.dataset.index);
       library.splice(index, 1);
       document.querySelector(`[data-index="${index}"]`).remove();
     });
   });
+
+  // Add event listener to "Toggle read status"
+  document.querySelectorAll(`.toggle-read-status`).forEach((button) => {
+    button.addEventListener("click", () => {
+      let index = button.dataset.index;
+      console.log("before toggle", library[index]);
+      if (library[index].readStatus === "Yes") {
+        library[index].readStatus = "No";
+      } else if (library[index].readStatus === "No") {
+        library[index].readStatus = "Yes";
+      }
+      console.log("after toggle", library[index]);
+    });
+  });
+
 });

@@ -123,6 +123,9 @@ document.querySelector(".cancel").addEventListener("click", () => {
 
 // Add event listener to "Submit" button in form modal
 document.querySelector(".submit").addEventListener("click", (event) => {
+  // Hide library is empty div
+  document.querySelector(".empty-library").style.display = "none";
+
   // Prevent submit button default behavior
   event.preventDefault();
 

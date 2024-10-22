@@ -1,5 +1,3 @@
-// !! Problem in toggling read status
-
 let library = [];
 
 // Book object constructor function
@@ -7,17 +5,15 @@ function Book(title, author, pages, readStatus) {
   (this.title = title),
     (this.author = author),
     (this.pages = pages),
-    (this.readStatus = readStatus);
-
-  // A method to change book's read status property
-  // this.changeReadStatus = function (index) {
-  //   // const book = this;
-  //   if (index.readStatus === "Yes") {
-  //     index.readStatus = "No";
-  //   } else if (index.readStatus === "No"){
-  //     index.readStatus = "Yes";
-  //   }
-  // };
+    (this.readStatus = readStatus),
+    // A method to change book's read status property
+    (this.changeReadStatus = function () {
+      if (this.readStatus === "Yes") {
+        this.readStatus = "No";
+      } else if (this.readStatus === "No") {
+        this.readStatus = "Yes";
+      }
+    });
 }
 
 // A function to a add a book to the library
@@ -25,6 +21,77 @@ function addToLibrary(title, author, pages, readStatus) {
   let bookObj = new Book(title, author, pages, readStatus);
   library.push(bookObj);
 }
+
+addToLibrary("s", "s", "23", "Yes");
+addToLibrary("ps", "3s", "223", "No");
+addToLibrary("dps", "s", "23", "Yes");
+addToLibrary("mdps", "3s", "223", "No");
+
+function displayBooks() {
+  for (let i = 0; i < library.length; i++) {
+    const book = document.createElement("div");
+    book.className = "book";
+    book.dataset.id = i;
+    document.querySelector(".content").appendChild(book);
+
+    const info = document.createElement("div");
+    info.className = "info";
+    book.appendChild(info);
+
+    const title = document.createElement("p");
+    title.classList = "title";
+    title.textContent = `Title: ${library.at(i).title}`;
+    info.appendChild(title);
+
+    const author = document.createElement("p");
+    author.classList = "author";
+    author.textContent = `Author: ${library.at(i).author}`;
+    info.appendChild(author);
+
+    const pages = document.createElement("p");
+    pages.classList = "pages";
+    pages.textContent = `Pages: ${library.at(i).pages}`;
+    info.appendChild(pages);
+
+    const readStatus = document.createElement("p");
+    readStatus.classList = "readStatus";
+    readStatus.textContent = `Read: ${library.at(i).readStatus}`;
+    info.appendChild(readStatus);
+
+    const buttons = document.createElement("div");
+    buttons.className = "book-buttons";
+    buttons.style.cssText = " display: flex; gap: 8px; ";
+    book.appendChild(buttons);
+
+    const toggle = document.createElement("button");
+    toggle.className = "toggle-read-status";
+    toggle.textContent = "Toggle read status";
+    buttons.appendChild(toggle);
+
+    const remove = document.createElement("button");
+    remove.className = "remove";
+    remove.textContent = "Remove";
+    buttons.appendChild(remove);
+
+    toggle.addEventListener("click", () => {
+      library[book.dataset.id].changeReadStatus();
+      readStatus.textContent = `Read: ${
+        library[book.dataset.id].readStatus
+      }`;
+      console.log(library[book.dataset.id]);
+    });
+
+    remove.addEventListener("click", () => {
+      library.splice(book.dataset.id, 1);
+      book.remove();
+      let books = document.querySelectorAll(".book");
+      for (let prop in books) {
+        books[prop].dataset.id = prop;
+      }
+    });
+  }
+}
+displayBooks();
 
 // Add event listener to "Add a book" button
 document.querySelector(".add-book").addEventListener("click", () => {
@@ -45,11 +112,7 @@ document.querySelector(".cancel").addEventListener("click", () => {
 });
 
 // Add event listener to "Submit" button in form modal
-let submitClicked = false;
 document.querySelector(".submit").addEventListener("click", (event) => {
-
-  submitClicked = true;
-
   // Prevent submit button default behavior
   event.preventDefault();
 
@@ -64,53 +127,41 @@ document.querySelector(".submit").addEventListener("click", (event) => {
 
   console.log(library);
 
-  // display the book
-  document.querySelector(".content").insertAdjacentHTML(
-    "beforeend",
-    `<div class="book" data-index="${library.length - 1}">
-				<div class="info">
-					<p>Title: ${library.at(-1).title}</p>
-					<p>Author: ${library.at(-1).author}</p>
-					<p>Pages: ${library.at(-1).pages}</p>
-					<p class="readStatus" data-index-read="${library.length - 1}">Read: ${
-      library.at(-1).readStatus
-    }</p>
-				</div>
-				<div class="buttons">
-					<button type="button" class="toggle-read-status" data-index="${
-            library.length - 1
-          }">Toggle read status</button>
-					<button type="button" class="remove" data-index="${
-            library.length - 1
-          }">Remove</button>
-				</div>
-			</div>`
-  );
-
   // close form modal
   document.querySelector("dialog").close();
 
-  // Add event listener to "Remove" button
-  document.querySelectorAll(".remove").forEach((button) => {
-    button.addEventListener("click", () => {
-      let index = button.dataset.index;
-      library.splice(index, 1);
-      document.querySelector(`[data-index="${index}"]`).remove();
-    });
-  });
-
-  // Add event listener to "Toggle read status"
-  document.querySelectorAll(`.toggle-read-status`).forEach((button) => {
-    button.addEventListener("click", () => {
-      let index = button.dataset.index;
-      console.log("before toggle", library[index]);
-      if (library[index].readStatus === "Yes") {
-        library[index].readStatus = "No";
-      } else if (library[index].readStatus === "No") {
-        library[index].readStatus = "Yes";
-      }
-      console.log("after toggle", library[index]);
-    });
-  });
-
+  displayBook();
 });
+
+// function displayBooks() {
+//   for (let i = 0; i < library.length; i++) {
+//     const book = document.createElement("div");
+//     book.className = "book";
+//     document.querySelector('.content').appendChild(book);
+
+//     const info = document.createElement("div");
+//     info.className = "info";
+//     book.appendChild(info);
+
+//     const title = document.createElement("p");
+//     title.classList = "title";
+//     title.textContent = `Title: ${library.at(i).title}`;
+//     info.appendChild(title);
+
+//     const author = document.createElement("p");
+//     author.classList = "author";
+//     author.textContent = `Author: ${library.at(i).author}`;
+//     info.appendChild(author);
+
+//     const pages = document.createElement("p");
+//     pages.classList = "pages";
+//     pages.textContent = `Pages: ${library.at(i).pages}`;
+//     info.appendChild(pages);
+
+//     const readStatus = document.createElement("p");
+//     readStatus.classList = "readStatus";
+//     readStatus.textContent = `Read: ${library.at(i).readStatus}`;
+//     info.appendChild(readStatus);
+
+//   }
+// }

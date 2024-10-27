@@ -110,10 +110,7 @@ document.querySelector(".add-book").addEventListener("click", () => {
   document.querySelector("dialog").showModal();
 
   // Clear form input fields for new input
-  document.querySelector("#title").value = "";
-  document.querySelector("#author").value = "";
-  document.querySelector("#pages").value = "";
-  document.querySelector("#status").value = "Yes";
+  document.querySelector("form").reset();
 });
 
 // Add event listener to "Cancel" button in form modal

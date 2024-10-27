@@ -6,16 +6,17 @@ function Book(title, author, pages, readStatus) {
   (this.title = title),
     (this.author = author),
     (this.pages = pages),
-    (this.readStatus = readStatus),
-    // A method to change book's read status property
-    (this.changeReadStatus = function () {
-      if (this.readStatus === "Yes") {
-        this.readStatus = "No";
-      } else if (this.readStatus === "No") {
-        this.readStatus = "Yes";
-      }
-    });
+    (this.readStatus = readStatus)
 }
+
+// A method to change book's read status property
+Book.prototype.changeReadStatus = function() {
+  if (this.readStatus === "Yes") {
+    this.readStatus = "No";
+  } else if (this.readStatus === "No") {
+    this.readStatus = "Yes";
+  }
+};
 
 // A function to create a book instance and add it to the library
 function addToLibrary(title, author, pages, readStatus) {

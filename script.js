@@ -1,22 +1,22 @@
 // An array to store book objects
 let library = [];
 
-// Book object constructor function
-function Book(title, author, pages, readStatus) {
-  (this.title = title),
+class Book {
+  constructor(title, author, pages, readStatus){
+    (this.title = title),
     (this.author = author),
     (this.pages = pages),
     (this.readStatus = readStatus)
-}
-
-// A method to change book's read status property
-Book.prototype.changeReadStatus = function() {
-  if (this.readStatus === "Yes") {
-    this.readStatus = "No";
-  } else if (this.readStatus === "No") {
-    this.readStatus = "Yes";
   }
-};
+  // Method to change read status
+  changeReadStatus(){
+    if (this.readStatus === "Yes") {
+      this.readStatus = "No";
+    } else if (this.readStatus === "No") {
+      this.readStatus = "Yes";
+    }
+  }
+}
 
 // A function to create a book instance and add it to the library
 function addToLibrary(title, author, pages, readStatus) {
@@ -73,35 +73,17 @@ function displayBook() {
   toggle.addEventListener("click", () => {
     library[book.dataset.id].changeReadStatus();
     readStatus.textContent = `Read: ${library[book.dataset.id].readStatus}`;
-    console.log(library[book.dataset.id]);
   });
 
   remove.addEventListener("click", () => {
     library.splice(book.dataset.id, 1);
     book.remove();
     let books = document.querySelectorAll(".book");
+    // Reduce data index for all books
     for (let prop in books) {
       books[prop].dataset.id = prop;
     }
   });
-
-  // The html structure for every book
-  // <div class="book" data-id="">
-  //   <div class="info">
-  //     <p class="title">Title: </p>
-  //     <p class="author">Author: </p>
-  //     <p class="pages">Pages: </p>
-  //     <p class="readStatus">Read: </p>
-  //   </div>
-  //   <div class="buttons">
-  //     <button type="button" class="toggle-read-status">
-  //       Toggle read status
-  //     </button>
-  //     <button type="button" class="remove">
-  //       Remove
-  //     </button>
-  //   </div>
-  // </div>
 }
 
 // Add event listener to "Add a book" button
